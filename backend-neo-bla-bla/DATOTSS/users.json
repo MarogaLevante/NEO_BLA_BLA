@@ -1,0 +1,20 @@
+[
+  {
+    "nombre": "Admin",
+    "email": "admin@neo.com",
+    "password": "$2a$10$xNlnT56y3FgNqRLoDpXZKOhkaTx0IH4KHo7akVZ77jk7egHF0wb6G",
+    "role": "admin"
+  },
+  {
+    "nombre": "Juan",
+    "email": "juan@neo.com",
+    "password": "$2a$10$2cZ2q8/ToUepzZ75XG5ZwuZh5T4zZC0O1ep1aPqu1xA1/7iGxaI3S",
+    "role": "user"
+  },
+  {
+    "nombre": "Lina",
+    "email": "lina@neo.com",
+    "password": "$2a$10$2cZ2q8/ToUepzZ75XG5ZwuZh5T4zZC0O1ep1aPqu1xA1/7iGxaI3S",
+    "role": "user"
+  }
+]

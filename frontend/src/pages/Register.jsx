@@ -1,80 +1,38 @@
 
+// src/pages/Register.jsx
 import React, { useState } from "react";
 
 export default function Register() {
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmar, setConfirmar] = useState("");
-  const [mensaje, setMensaje] = useState("");
+  const [form, setForm] = useState({ nombre: "", email: "", password: "" });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (password !== confirmar) {
-      setMensaje("❌ Las contraseñas no coinciden.");
-      return;
-    }
-
     try {
-      const res = await fetch("http://localhost:3001/api/register", {
+      const res = await fetch("http://localhost:3001/api/registro", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, email, password })
+        body: JSON.stringify(form),
       });
-
       const data = await res.json();
-      if (res.ok) {
-        setMensaje("✅ Registro exitoso. Ahora puedes iniciar sesión.");
-        setNombre(""); setEmail(""); setPassword(""); setConfirmar("");
-      } else {
-        setMensaje("❌ " + data.message);
-      }
+      alert(data.mensaje || "Registro completo");
     } catch (error) {
-      setMensaje("❌ Error en el servidor.");
+      alert("❌ Error al registrar usuario");
+      console.error(error);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4">Registro de nuevo usuario</h2>
-      {mensaje && <p className="mb-4 text-sm">{mensaje}</p>}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="Nombre completo"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          className="p-2 border rounded"
-          required
-        />
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmar}
-          onChange={(e) => setConfirmar(e.target.value)}
-          className="p-2 border rounded"
-          required
-        />
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-          Registrarse
-        </button>
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow rounded">
+      <h2 className="text-xl font-bold mb-4">📝 Registro</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input name="nombre" placeholder="Nombre" onChange={handleChange} required className="w-full p-2 border rounded" />
+        <input name="email" placeholder="Email" type="email" onChange={handleChange} required className="w-full p-2 border rounded" />
+        <input name="password" placeholder="Contraseña" type="password" onChange={handleChange} required className="w-full p-2 border rounded" />
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">Registrarse</button>
       </form>
     </div>
   );

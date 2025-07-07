@@ -12,3 +12,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App />
   </BrowserRouter>
 );
+// This code initializes the React application, setting up the main App component within a BrowserRouter for routing.
+// It also imports global styles from `index.css` and initializes internationalization (i18n) support by importing the `i18n` configuration file.
+// The `ReactDOM.createRoot`    

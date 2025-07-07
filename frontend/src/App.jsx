@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import PerfilUsuario from "./pages/PerfilUsuario";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/admin-reservas" element={<AdminReservas />} />
           <Route path="/registro" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/perfil" element={<PerfilUsuario />} />
         </Routes>
       </main>
     </div>

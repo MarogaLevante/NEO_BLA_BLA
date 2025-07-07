@@ -2,3 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 body { font-family: 'Rubik', sans-serif; }
+.react-calendar__tile--active {
+    background-color: #2563eb !important;
+    color: white !important;
+  }
+.react-calendar__tile--active:hover {
+    background-color: #1d4ed8 !important;
+    color: white !important;
+  }
+.react-calendar__tile--active:disabled {
+    background-color: #2563eb !important;
+    color: white !important;
+  }
+.react-calendar__tile--now {
+    background-color: #f3f4f6 !important;
+    color: #1f2937 !important;
+  }
+.react-calendar__tile--now:hover {
+    background-color: #e5e7eb !important;
+    color: #1f2937 !important;                  
+    }

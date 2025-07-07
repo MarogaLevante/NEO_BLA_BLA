@@ -1,65 +1,79 @@
 import React, { useState } from "react";
 
 export default function Chat() {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [mensajes, setMensajes] = useState([]);
+  const [cargando, setCargando] = useState(false);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-    const newMessages = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);
-    setInput("");
-    setLoading(true);
+  const enviarMensaje = async (e) => {
+    e.preventDefault();
+    if (!mensaje.trim()) return;
+
+    const nuevoMensajeUsuario = { rol: "user", contenido: mensaje };
+    setMensajes([...mensajes, nuevoMensajeUsuario]);
+    setMensaje("");
+    setCargando(true);
 
     try {
-      const res = await fetch("http://localhost:3010/api/chat", {
+      const res = await fetch("http://localhost:3001/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: newMessages
-        })
+        body: JSON.stringify({ mensaje }),
       });
+
       const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content || "Error en la respuesta.";
-      setMessages([...newMessages, { role: "assistant", content: reply }]);
+      if (res.ok) {
+        const nuevoMensajeIA = { rol: "ia", contenido: data.respuesta };
+        setMensajes((prev) => [...prev, nuevoMensajeIA]);
+      } else {
+        const errorMsg = data.error || "Error inesperado del servidor.";
+        setMensajes((prev) => [...prev, { rol: "error", contenido: errorMsg }]);
+      }
     } catch (err) {
-      setMessages([...newMessages, { role: "assistant", content: "❌ No se pudo conectar al servidor." }]);
+      setMensajes((prev) => [...prev, { rol: "error", contenido: "❌ No se pudo conectar al servidor." }]);
     } finally {
-      setLoading(false);
+      setCargando(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Chat con IA</h2>
-      <div className="border rounded p-4 h-64 overflow-y-auto bg-gray-50 mb-4">
-        {messages.map((msg, i) => (
-          <div key={i} className={`mb-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
-            <span className={`inline-block px-3 py-2 rounded ${msg.role === "user" ? "bg-blue-200" : "bg-green-100"}`}>
-              {msg.content}
-            </span>
+    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white shadow rounded">
+      <h2 className="text-2xl font-bold mb-4">💬 Chat con IA</h2>
+
+      <div className="h-64 overflow-y-auto bg-gray-100 p-4 rounded mb-4">
+        {mensajes.map((m, i) => (
+          <div
+            key={i}
+            className={`mb-2 p-2 rounded ${
+              m.rol === "user"
+                ? "bg-blue-100 text-right"
+                : m.rol === "ia"
+                ? "bg-green-100 text-left"
+                : "bg-red-100 text-left text-red-700"
+            }`}
+          >
+            {m.contenido}
           </div>
         ))}
+        {cargando && <div className="text-gray-500">⏳ Pensando...</div>}
       </div>
-      <div className="flex gap-2">
+
+      <form onSubmit={enviarMensaje} className="flex gap-2">
         <input
           type="text"
-          className="border flex-grow px-3 py-2 rounded"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={mensaje}
+          onChange={(e) => setMensaje(e.target.value)}
           placeholder="Escribe tu mensaje..."
-          disabled={loading}
+          className="flex-1 p-2 border rounded"
         />
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={sendMessage}
-          disabled={loading}
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          disabled={cargando}
         >
           Enviar
         </button>
-      </div>
+      </form>
     </div>
   );
 }
